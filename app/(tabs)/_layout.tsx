@@ -16,6 +16,20 @@ export default function TabLayout() {
         name="transfer"
         options={{
           title: 'Transfer',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="circle" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: 'History',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="square" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
         }}
       />
