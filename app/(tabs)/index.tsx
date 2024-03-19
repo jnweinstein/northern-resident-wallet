@@ -1,11 +1,20 @@
 // home screen
 import type { CardProps } from 'tamagui'
+import { View, Text } from 'react-native';
 
 import { Button, Card, H2, Image, Paragraph, YStack, XStack } from 'tamagui'
 
 type BalanceProps = {
     name: string,
     balance: number
+}
+
+export default function Tab() {
+  return (
+    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      <Text> Tab [Home|Settings]</Text>
+    </View>
+  );
 }
 
 export function CardDemo() {
