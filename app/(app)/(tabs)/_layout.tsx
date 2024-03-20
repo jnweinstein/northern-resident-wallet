@@ -1,8 +1,20 @@
 import * as React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
+import { Text } from 'tamagui'
+import { useSession } from '../../../ctx'
 
 export default function TabLayout() {
+  const { session, isLoading } = useSession();
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!session) {
+    return <Redirect href='/login' />;
+  }
+
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
       <Tabs.Screen
@@ -10,6 +22,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
+          headerShown: true,
         }}
       />
       <Tabs.Screen
@@ -17,6 +30,7 @@ export default function TabLayout() {
         options={{
           title: 'Transfer',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="circle" color={color} />,
+          headerShown: true,
         }}
       />
       <Tabs.Screen
@@ -24,6 +38,7 @@ export default function TabLayout() {
         options={{
           title: 'History',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="square" color={color} />,
+          headerShown: true,
         }}
       />
       <Tabs.Screen
@@ -31,6 +46,7 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
+          headerShown: true,
         }}
       />
     </Tabs>
