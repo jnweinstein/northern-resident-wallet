@@ -42,8 +42,7 @@ export default function SignIn() {
           themeInverse
           onPress={() => {
             signIn();
-            // Navigate after signing in. You may want to tweak this to ensure sign-in is
-            // successful before navigating.
+            // Add checks for successful sign-ins
             router.replace('/');
           }}>
           Sign In
