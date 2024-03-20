@@ -1,4 +1,4 @@
-import { View, Button, XStack, Avatar,  H6, H4, Card } from 'tamagui';
+import { View, Button, XStack, Avatar,  H6, H4, Card, Separator } from 'tamagui';
 import { useSession } from '../../../ctx';
 import EditableButton from '../../components/EditField';
 
@@ -14,12 +14,6 @@ export default function Tab() {
 
         <H6><EditableButton title={"Username"} onSubmit={() => {}} /></H6>
       </XStack>
-      <Button
-        onPress={() => {
-          signOut();
-        }}>
-        Sign Out
-      </Button>
         <Card>
             <Card.Header>
                 <H4>Edit Profile</H4>
@@ -33,6 +27,13 @@ export default function Tab() {
             {/* any other components */}
             <Card.Background />
         </Card>
+        <Separator marginVertical={15} style={{ width: '100%' }} borderColor={'midnightblue'} />
+        <Button
+        onPress={() => {
+          signOut();
+        }}>
+        Sign Out
+        </Button>
     </View>
   );
 }
