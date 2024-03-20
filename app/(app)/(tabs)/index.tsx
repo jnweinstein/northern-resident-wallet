@@ -1,8 +1,8 @@
 // home screen
-import type { CardProps } from 'tamagui'
-import { View, Text } from 'react-native';
-
-import { Button, Card, H2, Image, Paragraph, YStack, XStack } from 'tamagui'
+import React, { useState, useMemo } from 'react';
+import type { CardProps, FontSizeTokens, SelectProps } from 'tamagui'
+import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label } from 'tamagui';
+import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 
 type BalanceProps = {
     name: string,
@@ -11,44 +11,160 @@ type BalanceProps = {
 
 export default function Tab() {
   return (
-    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <Text> Tab [Home|Settings]</Text>
+    <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
+      <H4>Hello, (user)</H4>
+      <Separator marginVertical={15} style={{ width: '80%' }} maxWidth={600} />
+      <BalanceCard size="$5" style={{ width: '80%' }} maxWidth={600} />
+      <YStack gap="$4">
+      <XStack ai="center" gap="$4">
+        <Label htmlFor="select-coin" f={1} miw={80}>
+          Wallets
+        </Label>
+        <SelectDemoItem id="select-coin" />
+      </XStack>
+    </YStack>
+
     </View>
   );
 }
 
-export function CardDemo() {
+export function BalanceCard(props: CardProps) {
   return (
-    <YStack $sm={{ flexDirection: 'column' }} paddingHorizontal="$4" space>
-      <DemoCard
-        animation="bouncy"
-        size="$4"
-        width={250}
-        height={300}
-        scale={0.9}
-        hoverStyle={{ scale: 0.925 }}
-        pressStyle={{ scale: 0.875 }}
-      />
-      <DemoCard size="$5" width={250} height={300} />
-    </YStack>
-  )
-}
-export function DemoCard(props: CardProps, name: string) {
-  return (
-    <Card elevate size="$4" bordered {...props}>
+    <Card elevate size="$5" bordered {...props}>
       <Card.Header padded>
-        <H2>{name}</H2>
-        <Paragraph theme="alt2">Balance</Paragraph>
+        <H5>Your Balance</H5>
       </Card.Header>
-      
+
+      <Paragraph fontSize={30} paddingLeft={25} paddingBottom={10}>
+        0 BTC
+      </Paragraph>
+      <Text fontSize={15} color="$blue" paddingLeft={25}>
+        $0.00
+      </Text>
+
       <Card.Footer padded>
         <XStack flex={1} />
         <Button borderRadius="$10">Purchase</Button>
       </Card.Footer>
+
       <Card.Background>
       </Card.Background>
     </Card>
-
   )
-
 }
+
+export function SelectDemoItem(props: SelectProps) {
+  const [val, setVal] = useState('bitcoin')
+
+  return (
+    <Select value={val} onValueChange={setVal} disablePreventBodyScroll {...props}>
+      <Select.Trigger width={220} iconAfter={ChevronDown}>
+        <Select.Value placeholder="Something" />
+      </Select.Trigger>
+
+      <Adapt when="sm" platform="touch">
+        <Sheet
+          native={!!props.native}
+          modal
+          dismissOnSnapToBottom
+          animationConfig={{
+            type: 'spring',
+            damping: 20,
+            mass: 1.2,
+            stiffness: 250,
+          }}
+        >
+          <Sheet.Frame>
+            <Sheet.ScrollView>
+              <Adapt.Contents />
+            </Sheet.ScrollView>
+          </Sheet.Frame>
+          <Sheet.Overlay
+            animation="lazy"
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+        </Sheet>
+      </Adapt>
+
+      <Select.Content zIndex={200000}>
+        <Select.ScrollUpButton
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
+          width="100%"
+          height="$3"
+        >
+          <YStack zIndex={10}>
+            <ChevronUp size={20} />
+          </YStack>
+        </Select.ScrollUpButton>
+
+        <Select.Viewport
+          // to do animations:
+          // animation="quick"
+          // animateOnly={['transform', 'opacity']}
+          // enterStyle={{ o: 0, y: -10 }}
+          // exitStyle={{ o: 0, y: 10 }}
+          minWidth={200}
+        >
+          <Select.Group>
+            <Select.Label>Coins</Select.Label>
+            {/* for longer lists memoizing these is useful */}
+            {useMemo(
+              () =>
+                coins.map((item, i) => {
+                  return (
+                    <Select.Item
+                      index={i}
+                      key={item.name}
+                      value={item.name.toLowerCase()}
+                    >
+                      <Select.ItemText>{item.name}</Select.ItemText>
+                      <Select.ItemIndicator marginLeft="auto">
+                        <Check size={16} />
+                      </Select.ItemIndicator>
+                    </Select.Item>
+                  )
+                }),
+              [coins]
+            )}
+          </Select.Group>
+          {/* Native gets an extra icon */}
+          {props.native && (
+            <YStack
+              position="absolute"
+              right={0}
+              top={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              width={'$4'}
+              pointerEvents="none"
+            >
+              <ChevronDown
+                size={getFontSize((props.size as FontSizeTokens) ?? '$true')}
+              />
+            </YStack>
+          )}
+        </Select.Viewport>
+
+        <Select.ScrollDownButton
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
+          width="100%"
+          height="$3"
+        >
+          <YStack zIndex={10}>
+            <ChevronDown size={20} />
+          </YStack>
+        </Select.ScrollDownButton>
+      </Select.Content>
+    </Select>
+  )
+}
+
+const coins = [
+  { name: 'Bitcoin' },
+]
