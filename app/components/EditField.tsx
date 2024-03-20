@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
+import { Label } from 'tamagui';
 
 interface ButtonProps {
   title: string;
+  label: string;
   onSubmit: (newTitle: string) => void;
 }
 
-const EditableButton = ({ title, onSubmit } : ButtonProps) => {
+const EditableButton = ({ title, label, onSubmit } : ButtonProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
@@ -25,6 +27,7 @@ const EditableButton = ({ title, onSubmit } : ButtonProps) => {
   };
   if (isEditing) {
     return <>
+        
         <TextInput
           value={newTitle}
           onChangeText={handleInputChange}
@@ -33,7 +36,13 @@ const EditableButton = ({ title, onSubmit } : ButtonProps) => {
     </>
   }
   return (
-    <Button title={newTitle} onPress={handleEditClick} />
+    <>
+        <Label>
+          {label}
+        </Label>
+        <Button title={newTitle} onPress={handleEditClick} />
+    </>
+    
   );
 }
 
