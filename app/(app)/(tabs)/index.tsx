@@ -12,7 +12,7 @@ type BalanceProps = {
 export default function Tab() {
   return (
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
-      <H4>Hello, (user)</H4>
+      <H4>Hello, Northern Resident</H4>
       <Separator marginVertical={15} style={{ width: '80%' }} maxWidth={800} borderColor={'midnightblue'} />
       <BalanceCard size="$5" style={{ width: '80%' }} maxWidth={800} />
       <YStack gap="$4" padding="$3">

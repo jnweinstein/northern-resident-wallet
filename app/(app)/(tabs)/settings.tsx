@@ -25,10 +25,10 @@ export default function Tab() {
                 <H4>Edit Profile</H4>
             </Card.Header>
             
-            <EditableButton title={"gargoyle6283@gmail.com"} onSubmit={() => {}} />
-            <EditableButton title={"DeepBlue"} onSubmit={() => {}} />
-            <EditableButton title={"gargoyle6283@gmail.com"} onSubmit={() => {}} />
-            <EditableButton title={"gargoyle6283@gmail.com"} onSubmit={() => {}} />
+            <EditableButton title={"gargoyle6283@gmail.com"} label="Email" onSubmit={() => {}} />
+            <EditableButton title={"DeepBlue"} label="Handle" onSubmit={() => {}} />
+            <EditableButton title={"3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5"} label="Address" onSubmit={() => {}} />
+        
             <Card.Footer />
             {/* any other components */}
             <Card.Background />
