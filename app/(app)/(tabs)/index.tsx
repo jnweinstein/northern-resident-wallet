@@ -1,7 +1,7 @@
 // home screen
 import React, { useState, useMemo } from 'react';
 import type { CardProps, FontSizeTokens, SelectProps } from 'tamagui'
-import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label } from 'tamagui';
+import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, styled } from 'tamagui';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 
 type BalanceProps = {
@@ -13,11 +13,11 @@ export default function Tab() {
   return (
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
       <H4>Hello, (user)</H4>
-      <Separator marginVertical={15} style={{ width: '80%' }} maxWidth={600} />
-      <BalanceCard size="$5" style={{ width: '80%' }} maxWidth={600} />
-      <YStack gap="$4">
+      <Separator marginVertical={15} style={{ width: '80%' }} maxWidth={800} borderColor={'midnightblue'} />
+      <BalanceCard size="$5" style={{ width: '80%' }} maxWidth={800} />
+      <YStack gap="$4" padding="$3">
       <XStack ai="center" gap="$4">
-        <Label htmlFor="select-coin" f={1} miw={80}>
+        <Label htmlFor="select-coin" f={1} miw={80} >
           Wallets
         </Label>
         <SelectDemoItem id="select-coin" />
@@ -58,7 +58,7 @@ export function SelectDemoItem(props: SelectProps) {
 
   return (
     <Select value={val} onValueChange={setVal} disablePreventBodyScroll {...props}>
-      <Select.Trigger width={220} iconAfter={ChevronDown}>
+      <Select.Trigger width={120} iconAfter={ChevronDown}>
         <Select.Value placeholder="Something" />
       </Select.Trigger>
 
@@ -106,7 +106,7 @@ export function SelectDemoItem(props: SelectProps) {
           // animateOnly={['transform', 'opacity']}
           // enterStyle={{ o: 0, y: -10 }}
           // exitStyle={{ o: 0, y: 10 }}
-          minWidth={200}
+          minWidth={100}
         >
           <Select.Group>
             <Select.Label>Coins</Select.Label>

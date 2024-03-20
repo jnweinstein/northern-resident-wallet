@@ -22,7 +22,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -30,7 +30,7 @@ export default function TabLayout() {
         options={{
           title: 'Transfer',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="circle" color={color} />,
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -38,7 +38,7 @@ export default function TabLayout() {
         options={{
           title: 'History',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="square" color={color} />,
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -46,7 +46,7 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
-          headerShown: true,
+          headerShown: false,
         }}
       />
     </Tabs>

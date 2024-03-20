@@ -1,16 +1,16 @@
-import { View, Text } from 'tamagui';
+import { View, Text, Button } from 'tamagui';
 import { useSession } from '../../../ctx';
 
 export default function Tab() {
   const { signOut } = useSession();
   return (
-    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <Text
+    <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
+      <Button
         onPress={() => {
           signOut();
         }}>
         Sign Out
-      </Text>
+      </Button>
     </View>
   );
 }
