@@ -12,7 +12,7 @@ export default function Tab() {
           <Avatar.Fallback backgroundColor="grey" />
         </Avatar>
 
-        <H6><EditableButton title={"Username"} onSubmit={() => {}} /></H6>
+        <H6><EditableButton title={"Username"} label="" onSubmit={() => {}} /></H6>
       </XStack>
         <Card>
             <Card.Header>
