@@ -1,5 +1,6 @@
-import { View, Button, XStack, Avatar,  H6 } from 'tamagui';
+import { View, Button, XStack, Avatar,  H6, H4, Card } from 'tamagui';
 import { useSession } from '../../../ctx';
+import EditableButton from '../../components/EditField';
 
 export default function Tab() {
   const { signOut } = useSession();
@@ -7,9 +8,11 @@ export default function Tab() {
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
       <XStack alignContent='center' alignItems='center' space>
         <Avatar circular size="$4">
+            <Avatar.Image src="http://picsum.photos/200/300" />
           <Avatar.Fallback backgroundColor="grey" />
         </Avatar>
-        <H6>(username)</H6>
+
+        <H6><EditableButton title={"Username"} onSubmit={() => {}} /></H6>
       </XStack>
       <Button
         onPress={() => {
@@ -17,6 +20,19 @@ export default function Tab() {
         }}>
         Sign Out
       </Button>
+        <Card>
+            <Card.Header>
+                <H4>Edit Profile</H4>
+            </Card.Header>
+            
+            <EditableButton title={"gargoyle6283@gmail.com"} onSubmit={() => {}} />
+            <EditableButton title={"DeepBlue"} onSubmit={() => {}} />
+            <EditableButton title={"gargoyle6283@gmail.com"} onSubmit={() => {}} />
+            <EditableButton title={"gargoyle6283@gmail.com"} onSubmit={() => {}} />
+            <Card.Footer />
+            {/* any other components */}
+            <Card.Background />
+        </Card>
     </View>
   );
 }
