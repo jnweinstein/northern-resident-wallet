@@ -29,7 +29,7 @@ export default function TabLayout() {
         name="transfer"
         options={{
           title: 'Transfer',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="circle" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="bitcoin" color={color} />,
           headerShown: false,
         }}
       />
@@ -37,7 +37,7 @@ export default function TabLayout() {
         name="history"
         options={{
           title: 'History',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="square" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="book" color={color} />,
           headerShown: false,
         }}
       />
