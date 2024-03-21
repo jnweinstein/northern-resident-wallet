@@ -1,21 +1,24 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, UserCredential, User } from 'firebase/auth'
 import { app } from "./firebaseConfig";
 
 const auth = getAuth(app);
 
-export async function signIn(email: string, password: string): Promise<void> {
+export async function signIn(email: string, password: string): Promise<User | null> {
     try {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        return userCredential.user;
     } catch (errors) {
         console.error(errors)
+        return null;
     }
 }
-export async function signUp(email: string, password: string): Promise<void> {
+export async function signUp(email: string, password: string): Promise<User | null> {
     try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        return userCredential.user;
     } catch (errors) {
         console.error(errors)
+        return null;
     }
 }
 export async function signOutUser(): Promise<void> {

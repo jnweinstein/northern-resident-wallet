@@ -41,7 +41,7 @@ export default function SignIn() {
           style={{fontFamily: "Inter-Bold"}}
           themeInverse
           onPress={() => {
-            signIn();
+            const user = signIn("gargoyle6283@gmail.com", "password");
             // Add checks for successful sign-ins
             router.replace('/');
           }}>
