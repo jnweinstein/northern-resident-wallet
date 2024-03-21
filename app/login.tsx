@@ -36,7 +36,7 @@ export default function SignIn() {
       <YStack gap="$2">
       <H2 padding="1em">Northern Residents</H2>
       <Input flex={1} size={"$4"} placeholder={`Username`} />
-      <Input flex={1} size={"$4"} placeholder={`Password`} />
+      <Input flex={1} size={"$4"} placeholder={`Password`} secureTextEntry={true} />
         <Button
           style={{fontFamily: "Inter-Bold"}}
           themeInverse
