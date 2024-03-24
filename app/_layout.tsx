@@ -1,9 +1,9 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { AuthProvider } from '../ctx'
 
 import { Stack } from 'expo-router'
 
 import { useColorScheme } from 'react-native'
-import { SessionProvider } from '../ctx'
 
 import { TamaguiProvider } from 'tamagui'
 import tamaguiConfig from '../tamagui.config'
@@ -13,6 +13,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
+
+
   // const [fontsLoaded, fontError] = useFonts({
   //   'Inter-Bold': require('../assets/Inter-Bold.otf'),
   //   'Inter': require('../assets/Inter-Regular.otf')
@@ -26,11 +28,11 @@ export default function RootLayout() {
         // add this
         <TamaguiProvider config={tamaguiConfig}>
             <ThemeProvider value={ DefaultTheme}>
-                <SessionProvider>
-                    <Stack screenOptions={{ headerShown: false, }} >
-                        <Stack.Screen name="(app)/(tabs)" options={{ headerShown: false }} />
+                <AuthProvider>
+                    <Stack screenOptions={{ headerShown: false, }} initialRouteName='/login'>
+                        <Stack.Screen name="/" options={{ headerShown: false }} />
                     </Stack>
-                </SessionProvider>
+                </AuthProvider>
             </ThemeProvider>
         </TamaguiProvider>
     )

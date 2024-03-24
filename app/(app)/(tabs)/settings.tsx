@@ -1,14 +1,17 @@
 import { View, Button, XStack, Avatar,  H6, H4, Card, Separator } from 'tamagui';
-import { useSession } from '../../../ctx';
 import EditableButton from '../../components/EditField';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../firebaseAuth';
 
 export default function Tab() {
-  const { signOut } = useSession();
+  const signOutUser = async () => {
+    await signOut(auth)
+  }
   return (
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
       <XStack alignContent='center' alignItems='center' space>
         <Avatar circular size="$4">
-            <Avatar.Image src="http://picsum.photos/200/300" />
+          <Avatar.Image src="http://picsum.photos/200/300" />
           <Avatar.Fallback backgroundColor="grey" />
         </Avatar>
 
@@ -29,9 +32,7 @@ export default function Tab() {
         </Card>
         <Separator marginVertical={15} style={{ width: '100%' }} borderColor={'midnightblue'} />
         <Button
-        onPress={() => {
-          signOut();
-        }}>
+        onPress={() => signOutUser()}>
         Sign Out
         </Button>
     </View>

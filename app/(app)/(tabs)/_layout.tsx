@@ -1,20 +1,8 @@
 import * as React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Redirect, Tabs } from 'expo-router';
-import { Text } from 'tamagui'
-import { useSession } from '../../../ctx'
 
 export default function TabLayout() {
-  const { session, isLoading } = useSession();
-
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (!session) {
-    return <Redirect href='/login' />;
-  }
-
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
       <Tabs.Screen
