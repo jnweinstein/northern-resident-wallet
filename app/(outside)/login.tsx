@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import { Text, View, Alert } from 'react-native';
+import { Redirect, router } from 'expo-router';
+import { Platform, Text, View, Alert } from 'react-native';
 
 import { useFonts } from 'expo-font'
 import { useCallback, useState } from 'react'
@@ -8,22 +8,29 @@ import * as SplashScreen from 'expo-splash-screen';
 import { Button, H1, H2, Input, YStack } from 'tamagui';
 import React from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseAuth';
-import { FirebaseError } from 'firebase/app';
+import { auth } from '../../firebaseAuth';
+import { useAuth } from '../../ctx';
+//import InvalidAuthAlert from '../components/InvalidAuthAlert';
 SplashScreen.preventAutoHideAsync();
 
+type AuthErrorMsg = {
+  code: string,
+  message: string
+}
+
 export default function SignIn() {
-  //const { signIn } = useSession();
+  const { user } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<AuthErrorMsg | null>();
 
   const [fontsLoaded, fontError] = useFonts({
       //Inter: require("../node_modules/@tamagui/font-inter/otf/Inter-Medium.otf"),
       //InterBold: require("../node_modules/@tamagui/font-inter/otf/Inter-Bold.otf"),
       //"Inter": require("../assets/Inter-Bold.otf"),
-      "Inter": require('../assets/Inter-Regular.otf'),
-      "Inter-Bold": require("../assets/Inter-Bold.otf")
+      "Inter": require('../../assets/Inter-Regular.otf'),
+      "Inter-Bold": require("../../assets/Inter-Bold.otf")
   });
   const onLayoutRootView = useCallback(async () => {
       if (fontsLoaded || fontError) {
@@ -37,9 +44,16 @@ export default function SignIn() {
   async function signInWithEmail() {
     setLoading(true);
     try {
-      const user = signInWithEmailAndPassword(auth, email, password)
+      const user = await signInWithEmailAndPassword(auth, email, password)
+      console.log('user', user);
+      if (user?.user) {
+        console.log('redirecting to (app)/(tabs)  ')
+        setError(null);
+        router.replace('/')
+      }
     } catch (error: any) {
-      Alert.alert(error.message)
+      console.log("received error", error.message)
+      setError({code: error.code, message: error.message})
     }
     setLoading(false)
   }
@@ -48,16 +62,18 @@ export default function SignIn() {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} onLayout={onLayoutRootView}>
       <YStack gap="$2">
       <H2 padding="1em">Northern Residents</H2>
-      <Input flex={1} size={"$4"} placeholder={`Username`} onChange={(text) => setEmail(text.toString())}/>
-      <Input flex={1} size={"$4"} placeholder={`Password`} onChange={(text) => setPassword(text.toString())} secureTextEntry={true} />
+      <Input flex={1} size={"$4"} placeholder={`Username`} onChangeText={(text) => setEmail(text)}/>
+      <Input flex={1} size={"$4"} placeholder={`Password`} onChangeText={(text) => setPassword(text)} secureTextEntry={true} />
         <Button
           style={{fontFamily: "Inter-Bold"}}
           themeInverse
           disabled={loading}
-          onPress={() => signInWithEmail()}>
+          onPress={signInWithEmail}>
           Sign In
         </Button>
       </YStack>
+      {/* {error?.code && <InvalidAuthAlert visible={true}/>} */}
+      <Text>{error?.code && error.code}</Text>
     </View>
   );
 }

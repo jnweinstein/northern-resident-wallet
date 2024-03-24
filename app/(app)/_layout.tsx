@@ -1,5 +1,5 @@
 import { useAuth } from "../../ctx";
-import LoadingScreen from "../components/LoadingScreen";
+import LoadingScreen from "../../components/LoadingScreen";
 import { Redirect, Tabs } from "expo-router";
 
 const Layout = () => {

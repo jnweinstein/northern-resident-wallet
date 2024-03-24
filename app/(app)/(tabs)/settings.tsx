@@ -1,5 +1,5 @@
 import { View, Button, XStack, Avatar,  H6, H4, Card, Separator } from 'tamagui';
-import EditableButton from '../../components/EditField';
+import EditableButton from '../../../components/EditField';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebaseAuth';
 
