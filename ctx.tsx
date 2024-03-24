@@ -5,6 +5,7 @@ import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebaseAuth';
 import { Redirect } from 'expo-router';
+import { router } from 'expo-router';
 
 type AuthContextProps = {
     user: any;
@@ -40,9 +41,9 @@ export function AuthProvider(props: React.PropsWithChildren) {
       console.log('auth state changed: user: ', userChanged)
       
       setLoading(true);
-      if (user) { // if signed in now
+      if (userChanged) { // if signed in now
         setUser(userChanged)
-        Redirect({href: "(app)/(tabs)"})
+        router.replace('(app)/(tabs)')
         // const usersRef = collection(db, 'users')
         // const query = usersRef.where('user_id', '==', /* insert uuid */);
         // query.get().then((querySnapshot: any) => {
