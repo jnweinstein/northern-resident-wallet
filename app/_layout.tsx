@@ -30,7 +30,7 @@ export default function RootLayout() {
             <ThemeProvider value={ DefaultTheme}>
                 <AuthProvider>
                     <Stack screenOptions={{ headerShown: false, }} >
-                        <Stack.Screen name='(app)/(tabs)' options={{ headerShown: false }} />
+                        <Stack.Screen name='(app)/(tabs)' />
                     </Stack>
                 </AuthProvider>
             </ThemeProvider>

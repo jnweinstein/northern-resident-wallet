@@ -78,7 +78,7 @@ export default function Tab() {
 
 
   return (
-    <TransferStack.Navigator>
+    <TransferStack.Navigator screenOptions={{ headerShown: false }}>
       <TransferStack.Screen name="Transfer" component={TransferHomeScreen} />
       <TransferStack.Screen name="Send" component={SendScreen} />
       <TransferStack.Screen name="Receive" component={ReceiveScreen} />

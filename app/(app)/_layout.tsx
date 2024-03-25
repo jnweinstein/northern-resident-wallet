@@ -1,6 +1,6 @@
 import { useAuth } from "../../ctx";
 import LoadingScreen from "../../components/LoadingScreen";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 
 const Layout = () => {
     const { user, loading } = useAuth();
@@ -10,7 +10,7 @@ const Layout = () => {
     if (!user) {
       return <Redirect href="/login" />
     }
-    return <Tabs />
+    return <Stack screenOptions={{ headerShown: false }}/>
 }
 
 export default Layout;
