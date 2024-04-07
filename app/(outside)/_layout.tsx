@@ -6,7 +6,7 @@ export default function AuthLayout() {
 
   if (user) {
     console.log("found user!")
-    router.replace('/')
+    //router.replace('/')
     //return <Redirect href={'(app)/(tabs)'} />;
   }
 
