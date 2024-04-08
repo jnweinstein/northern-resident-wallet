@@ -10,6 +10,9 @@ import React from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseAuth';
 import { useAuth } from '../../ctx';
+import { db } from '../../firebaseConfig';
+import { collection, addDoc } from "firebase/firestore"; 
+
 //import InvalidAuthAlert from '../components/InvalidAuthAlert';
 SplashScreen.preventAutoHideAsync();
 
@@ -24,7 +27,6 @@ export default function CreateAccount() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm_password, setConfirmPassword] = useState('')
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<AuthErrorMsg | null>();
 
   const [fontsLoaded, fontError] = useFonts({
@@ -54,6 +56,19 @@ export default function CreateAccount() {
       console.log('user', user);
       if (user?.user) {
         console.log('created account')
+
+        try {
+            const docRef = await addDoc(collection(db, "users"), {
+              username: username,
+              email: email,
+              password: password,
+              wallets: []
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+        // clear out the states
         setUsername('');
         setEmail('')
         setPassword('')
@@ -78,7 +93,6 @@ export default function CreateAccount() {
         <Button
           style={{fontFamily: "Inter-Bold"}}
           themeInverse
-          disabled={loading}
           onPress={createAccount}>
           Create Account
         </Button>

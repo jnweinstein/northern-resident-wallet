@@ -7,7 +7,7 @@ import { useCallback, useState } from 'react'
 import * as SplashScreen from 'expo-splash-screen';
 import { Button, H1, H2, Input, YStack } from 'tamagui';
 import React from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseAuth';
 import { useAuth } from '../../ctx';
 //import InvalidAuthAlert from '../components/InvalidAuthAlert';

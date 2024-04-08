@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import type { CardProps, FontSizeTokens, SelectProps } from 'tamagui'
 import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, styled } from 'tamagui';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 type BalanceProps = {
     name: string,
@@ -10,9 +11,21 @@ type BalanceProps = {
 }
 
 export default function Tab() {
+  const [user, setUser] = useState('');
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      const uid = user.uid;
+      setUser(uid);
+    } 
+  });
+
   return (
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
-      <H4>Hello, Northern Resident</H4>
+      <H4>Hello, {user}</H4>
       <Separator marginVertical={15} style={{ width: '80%' }} maxWidth={800} borderColor={'midnightblue'} />
       <BalanceCard size="$5" style={{ width: '80%' }} maxWidth={800} />
       <YStack gap="$4" padding="$3">
@@ -21,6 +34,7 @@ export default function Tab() {
           Wallets
         </Label>
         <SelectDemoItem id="select-coin" />
+        <Button>Add a Wallet</Button>
       </XStack>
     </YStack>
 
