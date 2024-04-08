@@ -5,17 +5,26 @@ import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, 
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { db } from '../../../firebaseConfig';
-import { doc, getDoc, collection, addDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 type BalanceProps = {
     name: string,
     balance: number
 }
 
+function generateToken(n : any) {
+  var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  var token = '';
+  for(var i = 0; i < n; i++) {
+      token += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return token;
+}
+
 export default function Tab() {
   const [uid, setUID] = useState('');
   const [user, setUser] = useState('');
-  const [userWallets, setUserWallets] = useState([]);
+  const [userWallets, setUserWallets] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [walletName, setWalletName] = useState("");
 
@@ -29,6 +38,14 @@ export default function Tab() {
       if (docSnap.exists()) {
         setUID(user.uid);
         setUser(docSnap.data().username);
+        const wallets = [];
+        for (const element of docSnap.data().wallets) {
+          const walletDoc = await getDoc(doc(db, "wallets", element));
+          if (walletDoc.exists()) {
+            wallets.push(walletDoc.data())
+          }
+        }
+        setUserWallets(wallets);
       } else {
         // docSnap.data() will be undefined in this case
         console.log("No such document!");
@@ -41,15 +58,17 @@ export default function Tab() {
   };
 
   const handleFormSubmit = async () => {
-    const walletDocRef = await addDoc(collection(db, "wallets"), {
+    const token = generateToken(10);
+    const walletDocRef = await setDoc(doc(db, "wallets", token), {
       user_id: uid,
       wallet_name: walletName,
+      wallet_address: token,
       balance: 0
     });
     // Add reference to user's wallets field
     const userDocRef = doc(db, "users", uid);
     await updateDoc(userDocRef, {
-        wallets: arrayUnion(walletDocRef)
+        wallets: arrayUnion(token)
     });
 
     // Reset the form after adding wallet
@@ -71,8 +90,10 @@ export default function Tab() {
         <Button onPress={handleAddWallet}>Add a Wallet</Button>
       </XStack>
       {userWallets.map((wallet : any) => (
-          <View key={wallet.id}>
+          <View key={wallet.id} style={{ flexDirection: 'row' , justifyContent: 'space-between' }}>
+              <Label>{wallet.wallet_address}</Label>
               <Label>{wallet.wallet_name}</Label>
+              <Label>{wallet.balance}</Label>
               {/* You can add more details or actions related to each wallet here */}
           </View>
       ))}
