@@ -11,7 +11,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseAuth';
 import { useAuth } from '../../ctx';
 import { db } from '../../firebaseConfig';
-import { collection, addDoc } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore"; 
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 //import InvalidAuthAlert from '../components/InvalidAuthAlert';
 SplashScreen.preventAutoHideAsync();
@@ -56,18 +57,7 @@ export default function CreateAccount() {
       console.log('user', user);
       if (user?.user) {
         console.log('created account')
-
-        try {
-            const docRef = await addDoc(collection(db, "users"), {
-              username: username,
-              email: email,
-              password: password,
-              wallets: []
-            });
-            console.log("Document written with ID: ", docRef.id);
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
+        
         // clear out the states
         setUsername('');
         setEmail('')
@@ -75,6 +65,20 @@ export default function CreateAccount() {
         setConfirmPassword('')
         setError(null);
         router.replace('/login')
+
+        // Insert user data in db
+        const auth = getAuth();
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                await setDoc(doc(db, "users", user.uid), {
+                    username: username,
+                    email: email,
+                    password: password,
+                    wallets: []
+                });
+            }
+        });
+
       }
     } catch (error: any) {
       console.log("received error", error.message)

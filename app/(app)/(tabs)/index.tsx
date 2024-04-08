@@ -1,9 +1,11 @@
 // home screen
 import React, { useState, useMemo } from 'react';
 import type { CardProps, FontSizeTokens, SelectProps } from 'tamagui'
-import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, styled } from 'tamagui';
+import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, Input, styled } from 'tamagui';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { db } from '../../../firebaseConfig';
+import { doc, getDoc, collection, addDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 type BalanceProps = {
     name: string,
@@ -11,17 +13,49 @@ type BalanceProps = {
 }
 
 export default function Tab() {
+  const [uid, setUID] = useState('');
   const [user, setUser] = useState('');
+  const [userWallets, setUserWallets] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [walletName, setWalletName] = useState("");
 
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
-      setUser(uid);
+      const docSnap = await getDoc(doc(db, "users", user.uid));
+
+      if (docSnap.exists()) {
+        setUID(user.uid);
+        setUser(docSnap.data().username);
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+      }
     } 
   });
+
+  const handleAddWallet = () => {
+    setShowForm(true);
+  };
+
+  const handleFormSubmit = async () => {
+    const walletDocRef = await addDoc(collection(db, "wallets"), {
+      user_id: uid,
+      wallet_name: walletName,
+      balance: 0
+    });
+    // Add reference to user's wallets field
+    const userDocRef = doc(db, "users", uid);
+    await updateDoc(userDocRef, {
+        wallets: arrayUnion(walletDocRef)
+    });
+
+    // Reset the form after adding wallet
+    setWalletName("");
+    setShowForm(false);
+  };
 
   return (
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
@@ -34,8 +68,20 @@ export default function Tab() {
           Wallets
         </Label>
         <SelectDemoItem id="select-coin" />
-        <Button>Add a Wallet</Button>
+        <Button onPress={handleAddWallet}>Add a Wallet</Button>
       </XStack>
+      {userWallets.map((wallet : any) => (
+          <View key={wallet.id}>
+              <Label>{wallet.wallet_name}</Label>
+              {/* You can add more details or actions related to each wallet here */}
+          </View>
+      ))}
+      {showForm && (
+        <View>
+            <Input size={"$1"} marginBottom={"$3"} placeholder={`Wallet Name`} onChangeText={(text) => setWalletName(text)}/>
+            <Button onPress={handleFormSubmit}>Add Wallet</Button>
+        </View>
+      )}
     </YStack>
 
     </View>
