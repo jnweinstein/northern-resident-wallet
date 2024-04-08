@@ -63,7 +63,7 @@ export default function Tab() {
       user_id: uid,
       wallet_name: walletName,
       wallet_address: token,
-      balance: 0
+      balance: 100
     });
     // Add reference to user's wallets field
     const userDocRef = doc(db, "users", uid);
@@ -91,7 +91,7 @@ export default function Tab() {
       </XStack>
       {userWallets.map((wallet : any) => (
           <View key={wallet.id} style={{ flexDirection: 'row' , justifyContent: 'space-between' }}>
-              <Label>{wallet.wallet_address}</Label>
+              <Label selectable={true}>{wallet.wallet_address}</Label>
               <Label>{wallet.wallet_name}</Label>
               <Label>{wallet.balance}</Label>
               {/* You can add more details or actions related to each wallet here */}
