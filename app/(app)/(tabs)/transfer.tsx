@@ -3,19 +3,42 @@ import { View, Text, TextInput, Alert } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'tamagui';
 import QRCode from 'react-native-qrcode-svg';
+import { db } from '../../../firebaseConfig';
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 export default function Tab() {
 
   function SendScreen() {
     const [recipientAddress, setRecipientAddress] = useState('');
+    const [sourceAddress, setSourceAddress] = useState('');
     const [amount, setAmount] = useState('');
 
-    const handleSendBitcoin = () => {
+    const handleSendBitcoin = async () => {
       // Here you would handle the logic for sending Bitcoin
       // For this example, we'll just show an alert with the entered values
-      Alert.alert('Send Bitcoin', `Please confirm: You're sending ${amount} BTC to ${recipientAddress}`);
+      Alert.alert('Send Bitcoin', `Please confirm: You're sending ${amount} BTC to ${recipientAddress} from ${sourceAddress}`);
+      const sourceAddressDoc = await getDoc(doc(db, "wallets", sourceAddress));
+      const recipientAddressDoc = await getDoc(doc(db, "wallets", recipientAddress));
+      if (sourceAddressDoc.exists() && recipientAddressDoc.exists()) {
+        const currAmountSrc = sourceAddressDoc.data().balance;
+        const currAmountDest = recipientAddressDoc.data().balance;
+
+        const srcRef = doc(db, "wallets", sourceAddress);
+        const srcbalance = currAmountSrc - currAmountDest
+        await updateDoc(srcRef, {
+          balance: srcbalance
+        });
+        const destRef = doc(db, "wallets", recipientAddress);
+        const destbalance = currAmountDest + currAmountSrc
+        await updateDoc(destRef, {
+          balance: destbalance
+        });
+        
+      } 
+
       // Reset the fields after sending
       setRecipientAddress('');
+      setSourceAddress('');
       setAmount('');
     };
 
@@ -23,7 +46,13 @@ export default function Tab() {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 5, width: '80%' }}
-        placeholder="Recipient's Bitcoin Address"
+        placeholder="Your Source Wallet's Address"
+        value={sourceAddress}
+        onChangeText={text => setSourceAddress(text)}
+      />
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 5, width: '80%' }}
+        placeholder="Recipient's Wallet Address"
         value={recipientAddress}
         onChangeText={text => setRecipientAddress(text)}
       />
@@ -34,7 +63,7 @@ export default function Tab() {
         value={amount}
         onChangeText={text => setAmount(text)}
       />
-      <Button onPress={handleSendBitcoin}>Send Bitcoin!</Button>
+      <Button onPress={handleSendBitcoin}>Send</Button>
 
     </View>
     );
