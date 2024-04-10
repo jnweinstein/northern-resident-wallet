@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { View, Text, TextInput, Alert } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'tamagui';
+import { Send, QrCode } from '@tamagui/lucide-icons'
 import QRCode from 'react-native-qrcode-svg';
 import { db } from '../../../firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
@@ -91,15 +92,20 @@ export default function Tab() {
   function TransferHomeScreen({ navigation }: {navigation: any}) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Button alignSelf="center" size="$5" onPress={() => navigation.navigate('Send')}>
-          <Text style={{ fontWeight: 'bold', fontSize: 24 }}>Send</Text>
-          <Text>To an external BTC address</Text>
-        </Button>
-        <Button alignSelf="center" size="$5" onPress={() => navigation.navigate('Receive')}>
-          <Text style={{ fontWeight: 'bold', fontSize: 24 }}>Receive</Text>
-          <Text>By sharing your BTC address</Text>
-        </Button>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <Button variant="outlined" size="$8" onPress={() => navigation.navigate('Send')} style={{ marginRight: 20 }} icon={Send}>
+            <Text style={{ fontWeight: 'bold', fontSize: 24, textAlign: 'center' }}>
+                Send {'\n'} <Text style={{ fontSize: 12, textAlign: 'center' }}>To an external address</Text>
+            </Text>
+          </Button>
+          <Button variant="outlined" size="$8" onPress={() => navigation.navigate('Receive')} style={{ marginRight: 20 }} icon={QrCode}>
+            <Text style={{ fontWeight: 'bold', fontSize: 24, textAlign: 'center' }}>
+                Receive {'\n'} <Text style={{ fontSize: 12, textAlign: 'center' }}>By sharing your address</Text>
+            </Text>
+          </Button>
+        </View>
       </View>
+
     );
   }
 

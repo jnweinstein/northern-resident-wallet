@@ -1,11 +1,12 @@
 // home screen
 import React, { useState, useMemo } from 'react';
 import type { CardProps, FontSizeTokens, SelectProps } from 'tamagui'
-import { View, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, Input, styled } from 'tamagui';
+import { View, ScrollView, Checkbox, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, Input, styled } from 'tamagui';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
+import { SelectList } from 'react-native-dropdown-select-list'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { db } from '../../../firebaseConfig';
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 type BalanceProps = {
     name: string,
@@ -25,8 +26,14 @@ export default function Tab() {
   const [uid, setUID] = useState('');
   const [user, setUser] = useState('');
   const [userWallets, setUserWallets] = useState<any[]>([]);
-  const [showForm, setShowForm] = useState(false);
-  const [walletName, setWalletName] = useState("");
+  const [addWalletName, setAddWalletName] = useState("");
+  const [deleteWalletAddress, setDeleteWalletAddress] = useState("");
+  const [selected, setSelected] = useState(""); // for the edit wallet dropdown (add or delete a wallet)
+
+  const data = [
+    {key:'1', value:'Add a Wallet'},
+    {key:'2', value:'Delete a Wallet'},
+  ]
 
   const auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
@@ -53,15 +60,11 @@ export default function Tab() {
     } 
   });
 
-  const handleAddWallet = () => {
-    setShowForm(true);
-  };
-
-  const handleFormSubmit = async () => {
+  const handleAddFormSubmit = async () => {
     const token = generateToken(10);
     const walletDocRef = await setDoc(doc(db, "wallets", token), {
       user_id: uid,
-      wallet_name: walletName,
+      wallet_name: addWalletName,
       wallet_address: token,
       balance: 100
     });
@@ -70,13 +73,23 @@ export default function Tab() {
     await updateDoc(userDocRef, {
         wallets: arrayUnion(token)
     });
+    setSelected("");
+    setAddWalletName("");
+  };
 
-    // Reset the form after adding wallet
-    setWalletName("");
-    setShowForm(false);
+  const handleDeleteFormSubmit = async () => {
+    await deleteDoc(doc(db, "wallets", deleteWalletAddress));
+    // Delete the reference in user's wallets field
+    const userDocRef = doc(db, "users", uid);
+    await updateDoc(userDocRef, {
+        wallets: arrayRemove(deleteWalletAddress)
+    });
+    setSelected("");
+    setDeleteWalletAddress("");
   };
 
   return (
+    <ScrollView>
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
       <H4>Hello, {user}</H4>
       <Separator marginVertical={15} style={{ width: '80%' }} maxWidth={800} borderColor={'midnightblue'} />
@@ -84,28 +97,41 @@ export default function Tab() {
       <YStack gap="$4" padding="$3">
       <XStack ai="center" gap="$4">
         <Label htmlFor="select-coin" f={1} miw={80} >
-          Wallets
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Wallets</Text>
         </Label>
         <SelectDemoItem id="select-coin" />
-        <Button onPress={handleAddWallet}>Add a Wallet</Button>
+        <SelectList setSelected={(val : any) => setSelected(val)} placeholder="Edit Wallets" data={data} search={false} save="value"/>
       </XStack>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 14, fontWeight: 'bold'}}>Address</Text>
+        <Text style={{ fontSize: 14, fontWeight: 'bold'}}>Name</Text>
+        <Text style={{ fontSize: 14, fontWeight: 'bold'}}>Balance</Text>
+      </View>
+
       {userWallets.map((wallet : any) => (
-          <View key={wallet.id} style={{ flexDirection: 'row' , justifyContent: 'space-between' }}>
+          <View key={wallet.wallet_address} style={{ flexDirection: 'row' , justifyContent: 'space-between' }}>
               <Label selectable={true}>{wallet.wallet_address}</Label>
               <Label>{wallet.wallet_name}</Label>
               <Label>{wallet.balance}</Label>
               {/* You can add more details or actions related to each wallet here */}
           </View>
       ))}
-      {showForm && (
+      {selected=="Add a Wallet" && (
         <View>
-            <Input size={"$1"} marginBottom={"$3"} placeholder={`Wallet Name`} onChangeText={(text) => setWalletName(text)}/>
-            <Button onPress={handleFormSubmit}>Add Wallet</Button>
+            <Input size={"$1"} marginBottom={"$3"} placeholder={`Wallet Name`} onChangeText={(text) => setAddWalletName(text)}/>
+            <Button onPress={handleAddFormSubmit}>Add Wallet</Button>
+        </View>
+      )}
+      {selected=="Delete a Wallet" && (
+        <View>
+            <Input size={"$1"} marginBottom={"$3"} placeholder={`Wallet Address`} onChangeText={(text) => setDeleteWalletAddress(text)}/>
+            <Button onPress={handleDeleteFormSubmit}>Delete Wallet</Button>
         </View>
       )}
     </YStack>
 
     </View>
+    </ScrollView>
   );
 }
 
