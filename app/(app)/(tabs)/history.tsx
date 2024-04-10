@@ -1,30 +1,42 @@
+import React, {useState} from 'react';
 import { View, Text, FlatList } from 'react-native';
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../../../firebaseConfig';
 
 export default function Tab() {
-  const transactions = [
-    { type: 'sent', date: '2024-03-20', to: 'Recipient Address 1', amount: 0.5 },
-    { type: 'received', date: '2024-03-19', from: 'Sender Address 1', amount: 1.0 },
-    { type: 'received', date: '2024-03-18', from: 'Sender Address 1', amount: 10.0 },
-    { type: 'sent', date: '2024-03-16', to: 'Recipient Address 1', amount: 2.0 },
-    { type: 'received', date: '2024-03-10', from: 'Sender Address 1', amount: 1.0 },
-    // Add more transactions as needed
-    // This will all be in a database soon
-  ];
+  const [transactions, setTransactions] = useState<any[]>([]);
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const querySnapshot = await getDocs(collection(db, "transactions"));
+      const list: any[] = [];
+      querySnapshot.forEach((doc) => {
+          list.push(doc.data());
+      });
+      setTransactions(list);
+    } 
+  });
+
 
   const renderItem = ({ item }: {item: any}) => {
     const { type, date, to, from, amount } = item;
     return (
       <View style={{ flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontWeight: 'bold'}}>{type === 'sent' ? 'Sent' : 'Received'}</Text>
+          <Text style={{ fontWeight: 'bold'}}>{type}</Text>
         </View>
         <View style={{ flex: 2 }}>
           <Text>Date: {date}</Text>
         </View>
         <View style={{ flex: 3 }}>
-          <Text>{type === 'sent' ? 'To: ' + to : 'From: ' + from}</Text>
+          <Text>To: {to}</Text>
         </View>
         <View style={{ flex: 1 }}>
+          <Text>From: {from}</Text>
+        </View>
+        <View style={{ flex: 2 }}>
           <Text>Amount: {amount} BTC</Text>
         </View>
       </View>
@@ -41,9 +53,12 @@ export default function Tab() {
           <Text>Date</Text>
         </View>
         <View style={{ flex: 3 }}>
-          <Text>To/From</Text>
+          <Text>To</Text>
         </View>
         <View style={{ flex: 1 }}>
+          <Text>From</Text>
+        </View>
+        <View style={{ flex: 2 }}>
           <Text>Amount</Text>
         </View>
       </View>

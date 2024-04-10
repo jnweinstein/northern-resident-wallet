@@ -1,7 +1,7 @@
 // home screen
 import React, { useState, useMemo } from 'react';
 import type { CardProps, FontSizeTokens, SelectProps } from 'tamagui'
-import { View, ScrollView, Checkbox, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, Input, styled } from 'tamagui';
+import { View, ScrollView, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, Input, styled } from 'tamagui';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import { SelectList } from 'react-native-dropdown-select-list'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
@@ -93,7 +93,7 @@ export default function Tab() {
     <View style={{ justifyContent: 'left', alignItems: 'left', flex: 1, margin: '1em' }}>
       <H4>Hello, {user}</H4>
       <Separator marginVertical={15} style={{ width: '80%' }} maxWidth={800} borderColor={'midnightblue'} />
-      <BalanceCard size="$5" style={{ width: '80%' }} maxWidth={800} />
+      <BalanceCard size="$5" style={{ width: '80%' }} maxWidth={800}/>
       <YStack gap="$4" padding="$3">
       <XStack ai="center" gap="$4">
         <Label htmlFor="select-coin" f={1} miw={80} >
