@@ -8,6 +8,32 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
+  apiKey: "AIzaSyAOZV8Ja00iZPRVGW5WOIieuK7yTRtxN6c",
+  authDomain: "northern-resident-dummy-3.firebaseapp.com",
+  projectId: "northern-resident-dummy-3",
+  storageBucket: "northern-resident-dummy-3.appspot.com",
+  messagingSenderId: "920302370901",
+  appId: "1:920302370901:web:69132f6c6f2e874fa414dc",
+  measurementId: "G-8T2ZLE5HP0"
+};
+
+// Initialize Firebase
+export const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+export const db = getFirestore(app);
+
+
+/* // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
   apiKey: "AIzaSyD-hpb6ISG7fAld718m8vUQLx0993Fe1GM",
   authDomain: "northern-resident-dummy-2.firebaseapp.com",
   projectId: "northern-resident-dummy-2",
@@ -21,7 +47,8 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-export const db = getFirestore(app);
+export const db = getFirestore(app); */
+
 
 /* // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
