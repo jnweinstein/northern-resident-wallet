@@ -1,5 +1,5 @@
 // home screen
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import type { CardProps, FontSizeTokens, SelectProps } from 'tamagui'
 import { View, ScrollView, Text, H5, Button, Card, XStack, Separator, H4, Paragraph, Adapt, Select, Sheet, YStack, getFontSize, Label, Input, styled } from 'tamagui';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
@@ -35,30 +35,32 @@ export default function Tab() {
     {key:'2', value:'Delete a Wallet'},
   ]
 
-  const auth = getAuth();
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      const docSnap = await getDoc(doc(db, "users", user.uid));
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const docSnap = await getDoc(doc(db, "users", user.uid));
 
-      if (docSnap.exists()) {
-        setUID(user.uid);
-        setUser(docSnap.data().username);
-        const wallets = [];
-        for (const element of docSnap.data().wallets) {
-          const walletDoc = await getDoc(doc(db, "wallets", element));
-          if (walletDoc.exists()) {
-            wallets.push(walletDoc.data())
+        if (docSnap.exists()) {
+          setUID(user.uid);
+          setUser(docSnap.data().username);
+          const wallets = [];
+          for (const element of docSnap.data().wallets) {
+            const walletDoc = await getDoc(doc(db, "wallets", element));
+            if (walletDoc.exists()) {
+              wallets.push(walletDoc.data())
+            }
           }
+          setUserWallets(wallets);
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
         }
-        setUserWallets(wallets);
-      } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    } 
-  });
+      } 
+    });
+  }, []);
 
   const handleAddFormSubmit = async () => {
     const token = generateToken(10);

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, FlatList } from 'react-native';
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { collection, getDocs } from "firebase/firestore";
@@ -7,17 +7,20 @@ import { db } from '../../../firebaseConfig';
 export default function Tab() {
   const [transactions, setTransactions] = useState<any[]>([]);
 
-  const auth = getAuth();
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const querySnapshot = await getDocs(collection(db, "transactions"));
-      const list: any[] = [];
-      querySnapshot.forEach((doc) => {
-          list.push(doc.data());
-      });
-      setTransactions(list);
-    } 
-  });
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const querySnapshot = await getDocs(collection(db, "transactions"));
+        const list: any[] = [];
+        querySnapshot.forEach((doc) => {
+            list.push(doc.data());
+        });
+        setTransactions(list);
+      } 
+    });
+  }, []);
+
 
 
   const renderItem = ({ item }: {item: any}) => {

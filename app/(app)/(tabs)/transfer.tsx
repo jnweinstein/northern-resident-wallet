@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, TextInput, Alert } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'tamagui';
@@ -17,32 +17,34 @@ export default function Tab() {
     const [sourceAddress, setSourceAddress] = useState('');
     const [amount, setAmount] = useState('');
 
-    const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        const docSnap = await getDoc(doc(db, "users", user.uid));
+    useEffect(() => {
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/auth.user
+          const docSnap = await getDoc(doc(db, "users", user.uid));
 
-        if (docSnap.exists()) {
-          const wallets = [];
-          for (const element of docSnap.data().wallets) {
-            const walletDoc = await getDoc(doc(db, "wallets", element));
-            if (walletDoc.exists()) {
-              wallets.push(walletDoc.data())
+          if (docSnap.exists()) {
+            const wallets = [];
+            for (const element of docSnap.data().wallets) {
+              const walletDoc = await getDoc(doc(db, "wallets", element));
+              if (walletDoc.exists()) {
+                wallets.push(walletDoc.data())
+              }
             }
+            const list = wallets.map((wallet, i) => ({
+              key: i,
+              value: wallet.wallet_address
+            }));
+            setSourceWalletsList(list);
+          } else {
+            // docSnap.data() will be undefined in this case
+            console.log("No such document!");
           }
-          const list = wallets.map((wallet, i) => ({
-            key: i,
-            value: wallet.wallet_address
-          }));
-          setSourceWalletsList(list);
-        } else {
-          // docSnap.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      } 
-    });
+        } 
+      });
+    }, []);
 
     const handleSendBitcoin = async () => {
       // Here you would handle the logic for sending Bitcoin
@@ -71,13 +73,6 @@ export default function Tab() {
         from: sourceAddress,
         amount: amount
       });
-
-      /* await addDoc(collection(db, "transactions"), {
-        type: "Received",
-        date: Date(),
-        to: sourceAddress,
-        amount: amount
-      }); */
 
       // Reset the fields after sending
       setRecipientAddress('');

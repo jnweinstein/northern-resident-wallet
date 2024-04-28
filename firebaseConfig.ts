@@ -24,7 +24,8 @@ const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 
 
-/* // Import the functions you need from the SDKs you need
+/*
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
@@ -47,7 +48,8 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-export const db = getFirestore(app); */
+export const db = getFirestore(app);
+*/
 
 
 /* // For more information on how to access Firebase in your project,
